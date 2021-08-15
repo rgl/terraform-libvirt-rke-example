@@ -1,0 +1,7 @@
+.terraform/
+terraform.tfstate*
+secrets*
+tfplan
+*.log
+*.yaml
+*.json
