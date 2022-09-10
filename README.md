@@ -35,7 +35,7 @@ Launch this example:
 ```bash
 export TF_VAR_controller_count=1    # number of controller nodes.
 export TF_VAR_worker_count=1        # number of worker nodes.
-make recreate
+time make recreate
 ```
 
 Test accessing the cluster:

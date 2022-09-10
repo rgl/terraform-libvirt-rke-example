@@ -9,7 +9,7 @@ recreate: destroy apply
 apply:
 	terraform init
 	terraform plan -out=tfplan
-	time terraform apply tfplan
+	terraform apply tfplan
 
 destroy:
 	terraform destroy --auto-approve
