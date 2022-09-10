@@ -50,5 +50,5 @@ kubectl get nodes -o wide
 Destroy everything:
 
 ```bash
-time terraform destroy --auto-approve
+make destroy
 ```
