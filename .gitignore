@@ -1,3 +1,4 @@
+terraform-provider-rke-tmp-*/
 .terraform/
 terraform.tfstate*
 secrets*

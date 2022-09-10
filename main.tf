@@ -22,7 +22,7 @@ terraform {
     # see https://github.com/rancher/terraform-provider-rke
     rke = {
       source = "rancher/rke"
-      version = "1.2.3"
+      version = "1.3.3"
     }
   }
 }
@@ -32,7 +32,8 @@ variable "prefix" {
 }
 
 variable "kubernetes_version" {
-  default = "v1.20.8-rancher1-1"
+  # see https://github.com/rancher/rke/releases/tag/v1.3.13
+  default = "v1.20.15-rancher2-2"
 }
 
 variable "controller_count" {
@@ -225,6 +226,7 @@ resource "libvirt_domain" "worker" {
   }
 }
 
+# see https://registry.terraform.io/providers/rancher/rke/1.3.3/docs/resources/cluster
 resource "rke_cluster" "example" {
   kubernetes_version = var.kubernetes_version
   dynamic "nodes" {

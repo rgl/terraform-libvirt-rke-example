@@ -22,7 +22,7 @@ rm terraform terraform_*_linux_amd64.zip
 Install `kubectl`:
 
 ```bash
-kubectl_version='1.20.8'
+kubectl_version='1.20.15'
 wget -qO /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
 echo 'deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main' | sudo tee /etc/apt/sources.list.d/kubernetes.list >/dev/null
 sudo apt-get update
@@ -33,10 +33,9 @@ sudo apt-get install -y "kubectl=$kubectl_package_version"
 Launch this example:
 
 ```bash
-rm -f *.log kubeconfig.yaml
-terraform init
-terraform plan -out=tfplan
-time terraform apply tfplan
+export TF_VAR_controller_count=1    # number of controller nodes.
+export TF_VAR_worker_count=1        # number of worker nodes.
+make recreate
 ```
 
 Test accessing the cluster:
