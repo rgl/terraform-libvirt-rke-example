@@ -43,7 +43,9 @@ cd /tmp
 
 
 # NB execute apt-cache madison docker-ce to known the available versions.
-docker_version="${1:-20.10.8}"; shift || true
+docker_version="${1:-20.10.18}"; shift || true
+# NB execute apt-cache madison containerd.io to known the available versions.
+containerd_version="${1:-1.6.8}"; shift || true
 
 # prevent apt-get et al from asking questions.
 # NB even with this, you'll still get some warnings that you can ignore:
@@ -62,16 +64,22 @@ apt-get install -y apt-transport-https software-properties-common
 wget -qO- https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 apt-get update
-docker_version="$(apt-cache madison docker-ce | awk "/$docker_version~/{print \$3}")"
-apt-get install -y "docker-ce=$docker_version" "docker-ce-cli=$docker_version" containerd.io
-apt-mark hold docker-ce docker-ce-cli
+dpk_docker_version="$(apt-cache madison docker-ce | awk "/$docker_version~/{print \$3}")"
+dpk_containerd_version="$(apt-cache madison containerd.io | awk "/$containerd_version-/{print \$3}")"
+apt-get install -y \
+    "docker-ce=$dpk_docker_version" \
+    "docker-ce-cli=$dpk_docker_version" \
+    "containerd.io=$dpk_containerd_version"
+apt-mark hold \
+    docker-ce \
+    docker-ce-cli \
+    containerd.io
 
 # stop docker and containerd.
 systemctl stop docker
 systemctl stop containerd
 
 # use the systemd cgroup driver.
-# NB by default docker uses the containerd runc runtime.
 cgroup_driver='systemd'
 
 # configure containerd.
@@ -84,11 +92,7 @@ EOF
 sysctl --system
 containerd config default >/etc/containerd/config.toml
 cp -p /etc/containerd/config.toml{,.orig}
-if [ "$cgroup_driver" = 'systemd' ]; then
-    patch -d / -p0 <containerd-config.toml.patch
-else
-    patch -d / -R -p0 <containerd-config.toml.patch
-fi
+sed -i -E 's,(SystemdCgroup)\s*=.*,\1 = true,g' /etc/containerd/config.toml
 diff -u /etc/containerd/config.toml{.orig,} || true
 systemctl restart containerd
 

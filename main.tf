@@ -171,10 +171,6 @@ resource "libvirt_domain" "controller" {
     private_key = file("~/.ssh/id_rsa")
   }
   provisioner "file" {
-    source = "containerd-config.toml.patch"
-    destination = "/tmp/containerd-config.toml.patch"
-  }
-  provisioner "file" {
     source = "provision.sh"
     destination = "/tmp/provision.sh"
   }
@@ -214,10 +210,6 @@ resource "libvirt_domain" "worker" {
     user = "vagrant"
     host = self.network_interface[0].addresses[0]
     private_key = file("~/.ssh/id_rsa")
-  }
-  provisioner "file" {
-    source = "containerd-config.toml.patch"
-    destination = "/tmp/containerd-config.toml.patch"
   }
   provisioner "file" {
     source = "provision.sh"
