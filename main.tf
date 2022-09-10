@@ -16,7 +16,7 @@ terraform {
     # see https://github.com/dmacvicar/terraform-provider-libvirt
     libvirt = {
       source = "dmacvicar/libvirt"
-      version = "0.6.10"
+      version = "0.6.14"
     }
     # see https://registry.terraform.io/providers/rancher/rke
     # see https://github.com/rancher/terraform-provider-rke
@@ -61,7 +61,7 @@ provider "rke" {
   log_file = "rke.log"
 }
 
-# see https://github.com/dmacvicar/terraform-provider-libvirt/blob/v0.6.10/website/docs/r/network.markdown
+# see https://github.com/dmacvicar/terraform-provider-libvirt/blob/v0.6.14/website/docs/r/network.markdown
 resource "libvirt_network" "example" {
   name = var.prefix
   mode = "nat"
@@ -78,12 +78,12 @@ resource "libvirt_network" "example" {
 
 # a cloud-init disk for the controller nodes.
 # NB this creates an iso image that will be used by the NoCloud cloud-init datasource.
-# see https://github.com/dmacvicar/terraform-provider-libvirt/blob/v0.6.10/website/docs/r/cloudinit.html.markdown
+# see https://github.com/dmacvicar/terraform-provider-libvirt/blob/v0.6.14/website/docs/r/cloudinit.html.markdown
 # see journactl -u cloud-init
 # see /run/cloud-init/*.log
 # see https://cloudinit.readthedocs.io/en/latest/topics/examples.html#disk-setup
 # see https://cloudinit.readthedocs.io/en/latest/topics/datasources/nocloud.html#datasource-nocloud
-# see https://github.com/dmacvicar/terraform-provider-libvirt/blob/v0.6.10/libvirt/cloudinit_def.go#L133-L162
+# see https://github.com/dmacvicar/terraform-provider-libvirt/blob/v0.6.14/libvirt/cloudinit_def.go#L133-L162
 resource "libvirt_cloudinit_disk" "controller" {
   count = var.controller_count
   name = "${var.prefix}_c${count.index}_cloudinit.iso"
@@ -126,7 +126,7 @@ resource "libvirt_cloudinit_disk" "worker" {
 }
 
 # this uses the vagrant ubuntu image imported from https://github.com/rgl/ubuntu-vagrant.
-# see https://github.com/dmacvicar/terraform-provider-libvirt/blob/v0.6.10/website/docs/r/volume.html.markdown
+# see https://github.com/dmacvicar/terraform-provider-libvirt/blob/v0.6.14/website/docs/r/volume.html.markdown
 resource "libvirt_volume" "controller" {
   count = var.controller_count
   name = "${var.prefix}_c${count.index}.img"
@@ -143,12 +143,12 @@ resource "libvirt_volume" "worker" {
   size = 66*1024*1024*1024 # 66GiB. the root FS is automatically resized by cloud-init growpart (see https://cloudinit.readthedocs.io/en/latest/topics/examples.html#grow-partitions).
 }
 
-# see https://github.com/dmacvicar/terraform-provider-libvirt/blob/v0.6.10/website/docs/r/domain.html.markdown
+# see https://github.com/dmacvicar/terraform-provider-libvirt/blob/v0.6.14/website/docs/r/domain.html.markdown
 resource "libvirt_domain" "controller" {
   count = var.controller_count
   name = "${var.prefix}_c${count.index}"
   #firmware = "/usr/share/OVMF/OVMF_CODE.fd"
-  cpu = {
+  cpu {
     mode = "host-passthrough"
   }
   vcpu = 2
@@ -188,12 +188,12 @@ resource "libvirt_domain" "controller" {
   }
 }
 
-# see https://github.com/dmacvicar/terraform-provider-libvirt/blob/v0.6.10/website/docs/r/domain.html.markdown
+# see https://github.com/dmacvicar/terraform-provider-libvirt/blob/v0.6.14/website/docs/r/domain.html.markdown
 resource "libvirt_domain" "worker" {
   count = var.worker_count
   name = "${var.prefix}_w${count.index}"
   #firmware = "/usr/share/OVMF/OVMF_CODE.fd"
-  cpu = {
+  cpu {
     mode = "host-passthrough"
   }
   vcpu = 2
