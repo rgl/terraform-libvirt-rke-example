@@ -43,7 +43,7 @@ Test accessing the cluster:
 ```bash
 terraform output --raw rke_state >rke_state.json # might be useful for troubleshooting.
 terraform output --raw kubeconfig >kubeconfig.yaml
-export KUBECONFIG=$PWD/kubeconfig.yaml
+export KUBECONFIG="$PWD/kubeconfig.yaml"
 kubectl get nodes -o wide
 ```
 
