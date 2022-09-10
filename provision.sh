@@ -58,6 +58,10 @@ cloud-init status --wait
 # ensure we have an updated apt cache.
 apt-get update
 
+# install tools.
+apt-get install -y bash-completion
+apt-get install -y vim
+
 # install docker.
 # see https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository
 apt-get install -y apt-transport-https software-properties-common
@@ -137,3 +141,30 @@ fi
 
 # let the vagrant user manage docker.
 usermod -aG docker vagrant
+
+# download the cri tools.
+# see https://github.com/kubernetes-sigs/cri-tools/releases
+version='1.20.0'
+url="https://github.com/kubernetes-sigs/cri-tools/releases/download/v${version}/crictl-v${version}-linux-amd64.tar.gz"
+tgz="/tmp/cri-tools-${version}.tgz"
+wget -qO $tgz "$url"
+
+# configure the cri tools.
+cat >/etc/crictl.yaml <<'EOF'
+runtime-endpoint: unix:///run/containerd/containerd.sock
+image-endpoint: unix:///run/containerd/containerd.sock
+timeout: 2
+debug: false
+pull-image-on-create: false
+EOF
+
+# install the cri tools.
+tar xf $tgz -C /usr/local/bin
+rm -f $tgz
+
+# install the cri tools bash completion.
+crictl completion bash >/usr/share/bash-completion/completions/crictl
+
+# try the cri tools.
+crictl --version # the client side version.
+crictl version   # the server side version.
