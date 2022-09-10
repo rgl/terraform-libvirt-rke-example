@@ -13,8 +13,8 @@ Create and install the [Ubuntu 20.04 vagrant box](https://github.com/rgl/ubuntu-
 Install `terraform`:
 
 ```bash
-wget https://releases.hashicorp.com/terraform/1.0.6/terraform_1.0.6_linux_amd64.zip
-unzip terraform_1.0.6_linux_amd64.zip
+wget https://releases.hashicorp.com/terraform/1.2.9/terraform_1.2.9_linux_amd64.zip
+unzip terraform_1.2.9_linux_amd64.zip
 sudo install terraform /usr/local/bin
 rm terraform terraform_*_linux_amd64.zip
 ```
