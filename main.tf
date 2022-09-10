@@ -33,7 +33,7 @@ variable "prefix" {
 
 variable "kubernetes_version" {
   # see https://github.com/rancher/rke/releases/tag/v1.3.13
-  default = "v1.20.15-rancher2-2"
+  default = "v1.22.11-rancher1-1"
 }
 
 variable "controller_count" {

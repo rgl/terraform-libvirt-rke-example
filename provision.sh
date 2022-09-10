@@ -144,7 +144,7 @@ usermod -aG docker vagrant
 
 # download the cri tools.
 # see https://github.com/kubernetes-sigs/cri-tools/releases
-version='1.20.0'
+version='1.22.0'
 url="https://github.com/kubernetes-sigs/cri-tools/releases/download/v${version}/crictl-v${version}-linux-amd64.tar.gz"
 tgz="/tmp/cri-tools-${version}.tgz"
 wget -qO $tgz "$url"
