@@ -33,7 +33,7 @@ variable "prefix" {
 
 variable "kubernetes_version" {
   # see https://github.com/rancher/rke/releases/tag/v1.3.13
-  default = "v1.23.8-rancher1-1"
+  default = "v1.24.2-rancher1-1"
 }
 
 variable "controller_count" {
@@ -229,6 +229,7 @@ resource "libvirt_domain" "worker" {
 # see https://registry.terraform.io/providers/rancher/rke/1.3.3/docs/resources/cluster
 resource "rke_cluster" "example" {
   kubernetes_version = var.kubernetes_version
+  enable_cri_dockerd = true
   dynamic "nodes" {
     for_each = libvirt_domain.controller
     iterator = it
